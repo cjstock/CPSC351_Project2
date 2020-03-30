@@ -1,0 +1,10 @@
+total 52
+-rw-r--r-- 1 corey corey    18 Mar 30 14:11 README.md
+-rwxr-xr-x 1 corey corey 17176 Mar 30 15:00 time_pipe
+-rw-r--r-- 1 corey corey  1492 Mar 30 15:00 time_pipe.c
+-rwxr-xr-x 1 corey corey 17192 Mar 30 15:03 time_shm
+-rw-r--r-- 1 corey corey  1513 Mar 30 14:42 time_shm.c
+-rw-r--r-- 1 corey corey     0 Mar 30 15:04 time_shm_output.txt
+Start run time: 1585605887.662321
+End run time: 1585605887.666461
+Elapsed run time: 0.4140 seconds

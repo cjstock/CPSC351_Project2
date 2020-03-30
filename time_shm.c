@@ -14,9 +14,16 @@ int main(int argc, char* argv[])
     int argsc = argc - 1;
 
     struct timeval start_time;
-    // int shmid = shmget()
     struct timeval end_time;
     struct timeval elapsed_time;
+
+    struct timeval *shm_ptr;
+
+    //Setup a chunk of shared memory
+    key_t key = ftok("shmfile", 65);
+    int shmid = shmget(key, sizeof(struct timeval), 0666|IPC_CREAT);
+    shm_ptr = shmat(shmid, (void*)0, 0);
+
     pid_t pid, w;
     int status;
 
@@ -30,7 +37,8 @@ int main(int argc, char* argv[])
     else if (pid == 0)  //Inside child process
     {
 
-        gettimeofday(&start_time, 0);
+        //Write to the shared memory segment
+        gettimeofday(shm_ptr, 0);
 
         execvp(args[0], args);
 
@@ -41,11 +49,12 @@ int main(int argc, char* argv[])
         waitpid(pid, &status, 0);
         gettimeofday(&end_time, 0);
 
-        timersub(&end_time, &start_time, &elapsed_time);
+        //Calculate the run time
+        timersub(&end_time, shm_ptr, &elapsed_time);
 
-        printf("Start run time: %ld.%ld\n", start_time.tv_sec, start_time.tv_usec);
+        printf("Start run time: %ld.%ld\n", shm_ptr->tv_sec, shm_ptr->tv_usec);
         printf("End run time: %ld.%ld\n", end_time.tv_sec, end_time.tv_usec);
-        printf("Elapsed run time: %ld.%ld\n", elapsed_time.tv_sec, elapsed_time.tv_usec);
+        printf("Elapsed run time: %ld.%ld seconds\n", elapsed_time.tv_sec, elapsed_time.tv_usec);
         exit(0);
     }
 }
